@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"quavixAI/internal/modules/types"
 	"quavixAI/pkg/response"
 )
 
@@ -34,12 +35,12 @@ type FiveWhyRequest struct {
 }
 
 type RootCauseRequest struct {
-	Steps []FiveWhyStep `json:"steps"`
+	Steps []types.FiveWhyStep `json:"steps"`
 }
 
 type ReframeRequest struct {
-	Question string          `json:"question"`
-	Root     RootCauseResult `json:"root_cause"`
+	Question string                `json:"question"`
+	Root     types.RootCauseResult `json:"root_cause"`
 }
 
 type CompressRequest struct {

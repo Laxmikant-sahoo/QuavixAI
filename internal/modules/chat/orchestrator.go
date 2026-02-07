@@ -29,12 +29,13 @@ type FiveWhySession struct {
 // ================================
 
 type Orchestrator struct {
-	llm    llm.Manager
+	llm    *llm.Manager // ✅ POINTER
 	vector vector.Store
 	prompt prompt.Builder
 }
 
-func NewOrchestrator(llmMgr llm.Manager, vstore vector.Store, pb prompt.Builder) *Orchestrator {
+// ✅ POINTER IN CONSTRUCTOR
+func NewOrchestrator(llmMgr *llm.Manager, vstore vector.Store, pb prompt.Builder) *Orchestrator {
 	return &Orchestrator{
 		llm:    llmMgr,
 		vector: vstore,

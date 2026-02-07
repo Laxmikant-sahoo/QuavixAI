@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"quavixAI/internal/modules/llm"
+	"quavixAI/internal/modules/prompt"
+	"quavixAI/internal/modules/types"
 	"quavixAI/internal/modules/vector"
 )
 
@@ -45,7 +47,7 @@ func NewService(cfg ServiceConfig) *Service {
 		llm:          cfg.LLM,
 		vector:       cfg.Vector,
 		memory:       cfg.Memory,
-		orchestrator: NewOrchestrator(cfg.LLM, cfg.Vector, nil), // prompt builder injected in orchestrator init elsewhere
+		orchestrator: NewOrchestrator(cfg.LLM, cfg.Vector, prompt.NewBuilder()),
 		cfg:          cfg,
 	}
 }
@@ -72,11 +74,11 @@ func (s *Service) Chat(ctx context.Context, sessionID, userID, message string) (
 		contextStr = ctxData
 	}
 
-	prompt := "Context:\n" + contextStr + "\nUser:\n" + message
+	promptStr := "Context:\n" + contextStr + "\nUser:\n" + message
 
 	resp, err := s.llm.Generate(ctx, llm.Request{
 		Mode:   llm.ModeReasoning,
-		Prompt: prompt,
+		Prompt: promptStr,
 	})
 	if err != nil {
 		return nil, err
@@ -143,7 +145,7 @@ func (s *Service) FiveWhy(ctx context.Context, sessionID, userID, question strin
 // Root Cause Only API
 // ================================
 
-func (s *Service) RootCause(ctx context.Context, steps []FiveWhyStep) (*RootCauseResult, error) {
+func (s *Service) RootCause(ctx context.Context, steps []types.FiveWhyStep) (*types.RootCauseResult, error) {
 	if !s.cfg.RootCause {
 		return nil, errors.New("root-cause engine disabled")
 	}
@@ -155,7 +157,7 @@ func (s *Service) RootCause(ctx context.Context, steps []FiveWhyStep) (*RootCaus
 // Reframing API
 // ================================
 
-func (s *Service) Reframe(ctx context.Context, question string, rc RootCauseResult) (*ReframedQuestion, error) {
+func (s *Service) Reframe(ctx context.Context, question string, rc types.RootCauseResult) (*types.ReframedQuestion, error) {
 	if !s.cfg.Reframer {
 		return nil, errors.New("reframing engine disabled")
 	}
@@ -193,7 +195,6 @@ func (s *Service) BackgroundCompression(ctx context.Context, sessionID string) {
 
 func (s *Service) CleanupSession(ctx context.Context, sessionID string) {
 	go func() {
-		// placeholder for cleanup jobs
 		time.Sleep(1 * time.Second)
 	}()
 }
