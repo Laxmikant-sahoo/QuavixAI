@@ -10,4 +10,3 @@ func New(env string) *Logger {
 
 func (l *Logger) Info(v ...any)  { log.Println(v...) }
 func (l *Logger) Error(v ...any) { log.Println(v...) }
-func (l *Logger) Fatal(v ...any) { log.Fatal(v...) }
