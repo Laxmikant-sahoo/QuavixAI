@@ -19,6 +19,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func useing() int {
+	return A + B
+}
 func main() {
 	// ==============================
 	// Load config
