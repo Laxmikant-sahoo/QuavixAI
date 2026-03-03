@@ -8,13 +8,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-type Config struct {
-	Port        string `mapstructure:"PORT"`
-	DatabaseURL string `mapstructure:"DATABASE_URL"`
-	JWTSecret   string `mapstructure:"JWT_SECRET"`
-	RedisURL    string `mapstructure:"REDIS_URL"`
-}
-
 func LoadConfig() (*Config, error) {
 	// Load .env file if it exists
 	if _, err := os.Stat(".env"); err == nil {
